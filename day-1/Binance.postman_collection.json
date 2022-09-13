@@ -632,8 +632,8 @@
 							]
 						}
 					},
-					"status": "Bad Request",
-					"code": 400,
+					"status": "OK",
+					"code": 200,
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
@@ -642,7 +642,7 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "55"
+							"value": "252"
 						},
 						{
 							"key": "Connection",
@@ -650,7 +650,7 @@
 						},
 						{
 							"key": "Date",
-							"value": "Mon, 12 Sep 2022 17:40:26 GMT"
+							"value": "Tue, 13 Sep 2022 04:39:05 GMT"
 						},
 						{
 							"key": "Server",
@@ -658,15 +658,19 @@
 						},
 						{
 							"key": "x-mbx-uuid",
-							"value": "4d8ee4e2-e497-412b-839e-b6d5e6575b63"
+							"value": "0c800f25-49c7-4f5a-86c8-ac374143cd90"
 						},
 						{
 							"key": "x-mbx-used-weight",
-							"value": "21"
+							"value": "10"
 						},
 						{
 							"key": "x-mbx-used-weight-1m",
-							"value": "21"
+							"value": "10"
+						},
+						{
+							"key": "content-encoding",
+							"value": "gzip"
 						},
 						{
 							"key": "Strict-Transport-Security",
@@ -709,12 +713,20 @@
 							"value": "0"
 						},
 						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
 							"key": "X-Cache",
-							"value": "Error from cloudfront"
+							"value": "Miss from cloudfront"
 						},
 						{
 							"key": "Via",
-							"value": "1.1 c09b2ef63fb20b7ea23f29490d6a4bae.cloudfront.net (CloudFront)"
+							"value": "1.1 fec7a56ab42d5a8b29f272d162aa7430.cloudfront.net (CloudFront)"
 						},
 						{
 							"key": "X-Amz-Cf-Pop",
@@ -722,11 +734,11 @@
 						},
 						{
 							"key": "X-Amz-Cf-Id",
-							"value": "x0pvF2uKb6HX5n6w9079pHMFgl1SupunTVlThsCX3KPEZIguk1ElUQ=="
+							"value": "7w_sAJlEYW02YMe53F9L6--KydsZhQ6sKA4ieHGs_M4EOm_zbgUb2Q=="
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"code\": -1105,\n    \"msg\": \"Parameter 'signature' was empty.\"\n}"
+					"body": "{\n    \"makerCommission\": 0,\n    \"takerCommission\": 0,\n    \"buyerCommission\": 0,\n    \"sellerCommission\": 0,\n    \"canTrade\": true,\n    \"canWithdraw\": false,\n    \"canDeposit\": false,\n    \"brokered\": false,\n    \"updateTime\": 1663003056691,\n    \"accountType\": \"SPOT\",\n    \"balances\": [\n        {\n            \"asset\": \"BNB\",\n            \"free\": \"1000.00000000\",\n            \"locked\": \"0.00000000\"\n        },\n        {\n            \"asset\": \"BTC\",\n            \"free\": \"1.00000000\",\n            \"locked\": \"0.00000000\"\n        },\n        {\n            \"asset\": \"BUSD\",\n            \"free\": \"10000.00000000\",\n            \"locked\": \"0.00000000\"\n        },\n        {\n            \"asset\": \"ETH\",\n            \"free\": \"100.00000000\",\n            \"locked\": \"0.00000000\"\n        },\n        {\n            \"asset\": \"LTC\",\n            \"free\": \"500.00000000\",\n            \"locked\": \"0.00000000\"\n        },\n        {\n            \"asset\": \"TRX\",\n            \"free\": \"500000.00000000\",\n            \"locked\": \"0.00000000\"\n        },\n        {\n            \"asset\": \"USDT\",\n            \"free\": \"10000.00000000\",\n            \"locked\": \"0.00000000\"\n        },\n        {\n            \"asset\": \"XRP\",\n            \"free\": \"50000.00000000\",\n            \"locked\": \"0.00000000\"\n        }\n    ],\n    \"permissions\": [\n        \"SPOT\"\n    ]\n}"
 				}
 			]
 		}
