@@ -2,12 +2,14 @@ package routes
 
 import (
 	"alterra-agmc-day-3/controllers"
+	"alterra-agmc-day-3/middlewares"
 
 	"github.com/labstack/echo/v4"
 )
 
 func New() *echo.Echo {
 	e := echo.New()
+	middlewares.UseLogMiddleware(e)
 
 	v1 := e.Group("/v1")
 
