@@ -1,6 +1,7 @@
 package config
 
 import (
+	"alterra-agmc-day-2/models"
 	"log"
 	"os"
 
@@ -22,7 +23,7 @@ func InitDB() {
 }
 
 func initMigration() {
-	DB.AutoMigrate()
+	DB.AutoMigrate(&models.User{})
 }
 
 func getEnvOrDefault(envKey string, defaultVal string) string {
