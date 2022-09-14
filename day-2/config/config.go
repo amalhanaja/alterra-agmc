@@ -18,6 +18,11 @@ func InitDB() {
 		log.Panic(err)
 	}
 	log.Println("DB Connected")
+	initMigration()
+}
+
+func initMigration() {
+	DB.AutoMigrate()
 }
 
 func getEnvOrDefault(envKey string, defaultVal string) string {
