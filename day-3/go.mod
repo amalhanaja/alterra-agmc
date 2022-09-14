@@ -1,4 +1,4 @@
-module alterra-agmc-day-2
+module alterra-agmc-day-3
 
 go 1.19
 
