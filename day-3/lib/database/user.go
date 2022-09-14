@@ -11,6 +11,14 @@ func GetUsers() ([]models.User, error) {
 	return users, err
 }
 
+func GetUserByEmail(email string) (*models.User, error) {
+	var user models.User
+	if err := config.DB.Where("email = ?", email).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 func GetUserById(id uint) (*models.User, error) {
 	user := &models.User{}
 	if err := config.DB.First(user, id).Error; err != nil {
