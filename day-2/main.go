@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"alterra-agmc-day-2/config"
+)
 
 func main() {
-	fmt.Println("Hello")
+	config.InitDB()
 }
