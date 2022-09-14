@@ -1,0 +1,526 @@
+{
+	"info": {
+		"_postman_id": "fcb1fb57-8eb0-47e8-a8b8-5483182e8ddd",
+		"name": "Day 2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21624407"
+	},
+	"item": [
+		{
+			"name": "v1/books",
+			"item": [
+				{
+					"name": "{book id}",
+					"item": [
+						{
+							"name": "v1GetBookById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/v1/books/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"v1",
+										"books",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "v1UpdateBookById",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/v1/books/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"v1",
+										"books",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "v1DeleteBookById",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/v1/books/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"v1",
+										"books",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "v1GetBooks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/v1/books",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v1",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "v1CreateBook",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/v1/books",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v1",
+								"books"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "v1/users",
+			"item": [
+				{
+					"name": "{user id}",
+					"item": [
+						{
+							"name": "v1GetUserById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/v1/users/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"v1",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "a"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "v1GetUserById",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/v1/users/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"v1",
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "3"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=UTF-8"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 14 Sep 2022 07:17:47 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "218"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"ID\": 3,\n        \"CreatedAt\": \"2022-09-14T14:16:41.412+07:00\",\n        \"UpdatedAt\": \"2022-09-14T14:16:41.412+07:00\",\n        \"DeletedAt\": null,\n        \"name\": \"Alfian Hanantio\",\n        \"email\": \"amalhanaja@gmail.com\",\n        \"password\": \"rahasiadong\"\n    },\n    \"status\": \"OK\"\n}"
+								}
+							]
+						},
+						{
+							"name": "v1UpdateUserById",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/v1/users/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"v1",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "v1UpdateUserById",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"amalhanaja\",\n    \"email\": \"amalhanaja@gmail.com\",\n    \"password\": \"rahasiadong\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/v1/users/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"v1",
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "2"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=UTF-8"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 14 Sep 2022 07:17:53 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "204"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"ID\": 2,\n        \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n        \"UpdatedAt\": \"2022-09-14T14:17:52.995+07:00\",\n        \"DeletedAt\": null,\n        \"name\": \"amalhanaja\",\n        \"email\": \"amalhanaja@gmail.com\",\n        \"password\": \"rahasiadong\"\n    },\n    \"status\": \"OK\"\n}"
+								}
+							]
+						},
+						{
+							"name": "v1DeleteUserById",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/v1/users/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"v1",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "v1DeleteUserById",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/v1/users/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"v1",
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=UTF-8"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 14 Sep 2022 07:18:01 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "36"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"deleted\",\n    \"status\": \"OK\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "v1GetUsers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "tono@example.com",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "v1GetUsers",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/v1/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"v1",
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 14 Sep 2022 07:17:32 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "574"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"ID\": 1,\n            \"CreatedAt\": \"2022-09-14T14:12:56.949+07:00\",\n            \"UpdatedAt\": \"2022-09-14T14:12:56.949+07:00\",\n            \"DeletedAt\": null,\n            \"name\": \"\",\n            \"email\": \"\",\n            \"password\": \"1234\"\n        },\n        {\n            \"ID\": 2,\n            \"CreatedAt\": \"2022-09-14T14:14:13.812+07:00\",\n            \"UpdatedAt\": \"2022-09-14T14:14:13.812+07:00\",\n            \"DeletedAt\": null,\n            \"name\": \"Alfian AKmal Hanantio\",\n            \"email\": \"amalhanaja@gmail.com\",\n            \"password\": \"rahasiadong\"\n        },\n        {\n            \"ID\": 3,\n            \"CreatedAt\": \"2022-09-14T14:16:41.412+07:00\",\n            \"UpdatedAt\": \"2022-09-14T14:16:41.412+07:00\",\n            \"DeletedAt\": null,\n            \"name\": \"Alfian Hanantio\",\n            \"email\": \"amalhanaja@gmail.com\",\n            \"password\": \"rahasiadong\"\n        }\n    ],\n    \"status\": \"OK\"\n}"
+						}
+					]
+				},
+				{
+					"name": "v1CreateUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "v1CreateUser",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Alfian\",\r\n    \"email\": \"amalhanaja@gmail.com\",\r\n    \"password\": \"rahasiadong\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/v1/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"v1",
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 14 Sep 2022 07:16:41 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "218"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"ID\": 3,\n        \"CreatedAt\": \"2022-09-14T14:16:41.412+07:00\",\n        \"UpdatedAt\": \"2022-09-14T14:16:41.412+07:00\",\n        \"DeletedAt\": null,\n        \"name\": \"Alfian Hanantio\",\n        \"email\": \"amalhanaja@gmail.com\",\n        \"password\": \"rahasiadong\"\n    },\n    \"status\": \"OK\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
