@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"alterra-agmc-day-4/lib/jwt"
+	"alterra-agmc-day-3/lib/jwt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"

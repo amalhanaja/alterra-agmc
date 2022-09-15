@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"alterra-agmc-day-4/models"
+	"alterra-agmc-day-3/models"
 	"net/http"
 	"strconv"
 	"time"

@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"alterra-agmc-day-4/config"
+	"alterra-agmc-day-3/config"
 	"fmt"
 	"strconv"
 	"time"

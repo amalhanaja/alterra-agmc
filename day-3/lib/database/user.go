@@ -1,8 +1,8 @@
 package database
 
 import (
-	"alterra-agmc-day-4/config"
-	"alterra-agmc-day-4/models"
+	"alterra-agmc-day-3/config"
+	"alterra-agmc-day-3/models"
 )
 
 func GetUsers() ([]models.User, error) {

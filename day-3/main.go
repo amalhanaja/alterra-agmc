@@ -1,9 +1,9 @@
 package main
 
 import (
-	"alterra-agmc-day-4/config"
-	"alterra-agmc-day-4/lib/validator"
-	"alterra-agmc-day-4/routes"
+	"alterra-agmc-day-3/config"
+	"alterra-agmc-day-3/lib/validator"
+	"alterra-agmc-day-3/routes"
 )
 
 func main() {

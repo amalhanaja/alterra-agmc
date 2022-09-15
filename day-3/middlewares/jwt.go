@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"alterra-agmc-day-4/config"
+	"alterra-agmc-day-3/config"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"

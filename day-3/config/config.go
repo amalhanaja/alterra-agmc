@@ -1,7 +1,7 @@
 package config
 
 import (
-	"alterra-agmc-day-4/models"
+	"alterra-agmc-day-3/models"
 	"log"
 	"os"
 	"strconv"

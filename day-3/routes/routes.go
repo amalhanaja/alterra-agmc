@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"alterra-agmc-day-4/controllers"
-	"alterra-agmc-day-4/middlewares"
+	"alterra-agmc-day-3/controllers"
+	"alterra-agmc-day-3/middlewares"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
