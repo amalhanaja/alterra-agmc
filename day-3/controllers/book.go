@@ -9,17 +9,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+var books []models.Book
+
 func GetBooks(c echo.Context) error {
-	books := []models.Book{
-		{
-			ID:        1234,
-			Title:     "Buku Pertama",
-			Isbn:      "1-234-5678-9101112-13",
-			Writer:    "Alfian Akmal Hanantio",
-			CreatedAt: time.Now().UTC(),
-			UpdatedAt: time.Now().UTC(),
-		},
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status": "OK",
 		"data":   books,
@@ -35,13 +27,14 @@ func GetBookById(c echo.Context) error {
 			"message": err.Error(),
 		})
 	}
-	book := models.Book{
-		ID:        uint(id),
-		Title:     "Buku Pertama",
-		Isbn:      "1-234-5678-9101112-13",
-		Writer:    "Alfian Akmal Hanantio",
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
+	book := firstBook(func(b models.Book) bool {
+		return b.ID == uint(id)
+	})
+	if book == nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"status":  "BAD_REQUEST",
+			"message": "book not found",
+		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status": "OK",
@@ -50,26 +43,44 @@ func GetBookById(c echo.Context) error {
 }
 
 func CreateBook(c echo.Context) error {
-	var jsonBody models.Book
-	err := c.Bind(&jsonBody)
+	uid, err := getAuthorizedUserId(c)
 	if err != nil {
+		return err
+	}
+	var payload models.CreateBookPayload
+	utcNow := time.Now().UTC()
+	if err := c.Bind(&payload); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"status":  "BAD_REQUEST",
 			"message": err.Error(),
 		})
 	}
-	jsonBody.CreatedAt = time.Now().UTC()
-	jsonBody.UpdatedAt = time.Now().UTC()
+	if err := c.Validate(payload); err != nil {
+		return err
+	}
+	book := models.Book{
+		ID:        uint(len(books) + 1),
+		Title:     payload.Title,
+		Isbn:      payload.Isbn,
+		Writer:    payload.Writer,
+		CreatedAt: utcNow,
+		UpdatedAt: utcNow,
+		UserID:    uid,
+	}
+	books = append(books, book)
 	return c.JSON(http.StatusCreated, map[string]interface{}{
 		"status": "CREATED",
-		"data":   jsonBody,
+		"data":   book,
 	})
 }
 
 func UpdateBook(c echo.Context) error {
-	var jsonBody models.Book
-	err := c.Bind(&jsonBody)
+	uid, err := getAuthorizedUserId(c)
 	if err != nil {
+		return err
+	}
+	var payload models.UpdateBookPayload
+	if err := c.Bind(&payload); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"status":  "BAD_REQUEST",
 			"message": err.Error(),
@@ -83,24 +94,80 @@ func UpdateBook(c echo.Context) error {
 			"message": err.Error(),
 		})
 	}
-	jsonBody.ID = uint(id)
+	if err := c.Validate(payload); err != nil {
+		return err
+	}
+	book := firstBook(func(b models.Book) bool {
+		return b.ID == uint(id)
+	})
+	if book == nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"status":  "BAD_REQUEST",
+			"message": "book not found",
+		})
+	}
+	if book.UserID != uid {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"status":  "UNAUTHORIZED",
+			"message": "akses di tolak",
+		})
+	}
+	if payload.Title != "" {
+		book.Title = payload.Title
+	}
+	if payload.Isbn != "" {
+		book.Isbn = payload.Isbn
+	}
+	if payload.Writer != "" {
+		book.Writer = payload.Writer
+	}
+	books[id-1] = *book
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status": "OK",
-		"data":   jsonBody,
+		"data":   book,
 	})
 }
 
 func DeleteBook(c echo.Context) error {
 	strId := c.Param("id")
-	_, err := strconv.Atoi(strId)
+	id, err := strconv.Atoi(strId)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"status":  "BAD_REQUEST",
 			"message": err.Error(),
 		})
 	}
+	uid, err := getAuthorizedUserId(c)
+	if err != nil {
+		return err
+	}
+	book := firstBook(func(b models.Book) bool {
+		return b.ID == uint(id)
+	})
+	if book == nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"status":  "BAD_REQUEST",
+			"message": "book not found",
+		})
+	}
+	if book.UserID != uid {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"status":  "UNAUTHORIZED",
+			"message": "akses di tolak",
+		})
+	}
+	books = append(books[:id-1], books[id:]...)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status":  "OK",
 		"message": "deleted",
 	})
+}
+
+func firstBook(predicate func(models.Book) bool) *models.Book {
+	for _, book := range books {
+		if predicate(book) {
+			return &book
+		}
+	}
+	return nil
 }

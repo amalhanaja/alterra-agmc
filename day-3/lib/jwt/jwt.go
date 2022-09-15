@@ -20,8 +20,8 @@ func NewToken(id uint) (string, error) {
 
 func ExtractID(token *jwt.Token) (uint, error) {
 	if token.Valid {
-		claims := token.Claims.(jwt.StandardClaims)
-		id, err := strconv.Atoi(claims.Subject)
+		claims := token.Claims.(jwt.MapClaims)
+		id, err := strconv.Atoi(claims["sub"].(string))
 		if err != nil {
 			return 0, fmt.Errorf("failed parse id")
 		}
