@@ -84,35 +84,50 @@ func GetUserById(c echo.Context) error {
 }
 
 func CreateUser(c echo.Context) error {
-	var jsonBody models.User
-	err := c.Bind(&jsonBody)
+	var payload models.CreateUserPayload
+	err := c.Bind(&payload)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"status":  "BAD_REQUEST",
 			"message": err.Error(),
 		})
 	}
-	createdUser, err := database.CreateUser(&jsonBody)
+	if err := c.Validate(payload); err != nil {
+		return err
+	}
+	user := &models.User{
+		Name:     payload.Name,
+		Email:    payload.Email,
+		Password: payload.Password,
+	}
+	createdUser, err := database.CreateUser(user)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"status":  "BAD_REQUEST",
 			"message": err.Error(),
 		})
 	}
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"status": "OK",
+	return c.JSON(http.StatusCreated, map[string]interface{}{
+		"status": "CREATED",
 		"data":   createdUser,
 	})
 }
 
 func UpdateUser(c echo.Context) error {
-	var jsonBody models.User
-	err := c.Bind(&jsonBody)
+	var payload models.UpdateUserPayload
+	uid, err := getAuthorizedUserId(c)
 	if err != nil {
+		return err
+	}
+
+	if err := c.Bind(&payload); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"status":  "BAD_REQUEST",
 			"message": err.Error(),
 		})
+	}
+	if err := c.Validate(payload); err != nil {
+		return err
 	}
 	strId := c.Param("id")
 	id, err := strconv.Atoi(strId)
@@ -122,8 +137,19 @@ func UpdateUser(c echo.Context) error {
 			"message": err.Error(),
 		})
 	}
-	jsonBody.ID = uint(id)
-	updatedUser, err := database.UpdateUser(&jsonBody)
+	if uint(id) != uid {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"status":  "UNAUTHORIZED",
+			"message": "akses di tolak",
+		})
+	}
+	user := &models.User{
+		Name:     payload.Name,
+		Email:    payload.Email,
+		Password: payload.Password,
+	}
+	user.ID = uint(id)
+	updatedUser, err := database.UpdateUser(user)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"status":  "BAD_REQUEST",
@@ -137,6 +163,10 @@ func UpdateUser(c echo.Context) error {
 }
 
 func DeleteUser(c echo.Context) error {
+	uid, err := getAuthorizedUserId(c)
+	if err != nil {
+		return err
+	}
 	strId := c.Param("id")
 	id, err := strconv.Atoi(strId)
 	if err != nil {
@@ -145,6 +175,14 @@ func DeleteUser(c echo.Context) error {
 			"message": err.Error(),
 		})
 	}
+
+	if uint(id) != uid {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"status":  "UNAUTHORIZED",
+			"message": "akses di tolak",
+		})
+	}
+
 	if err := database.DeleteUser(uint(id)); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"status":  "BAD_REQUEST",
