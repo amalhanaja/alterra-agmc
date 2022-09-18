@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"alterra-agmc-day-3/lib/validator"
+	"alterra-agmc-day-4/lib/validator"
 	"alterra-agmc-day-4/models"
 	"encoding/json"
 	"net/http"
