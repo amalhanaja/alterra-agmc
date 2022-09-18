@@ -444,7 +444,7 @@ func TestDeleteBook(t *testing.T) {
 			expectMessage:  `strconv.Atoi: parsing "NaN": invalid syntax`,
 		},
 		{
-			name: "Test update book when user is authorized and book not found",
+			name: "Test delete book when user is authorized and book not found",
 			token: &jwt.Token{
 				Valid:  true,
 				Claims: jwt.MapClaims{"sub": "123"},
@@ -458,7 +458,7 @@ func TestDeleteBook(t *testing.T) {
 			expectMessage:  "book not found",
 		},
 		{
-			name: "Test update book when user is authorized and doesn't has access to edit book",
+			name: "Test delete book when user is authorized and doesn't has access to edit book",
 			token: &jwt.Token{
 				Valid:  true,
 				Claims: jwt.MapClaims{"sub": "123"},
@@ -482,7 +482,7 @@ func TestDeleteBook(t *testing.T) {
 			expectMessage:  "access denied",
 		},
 		{
-			name: "Test update book when user is authorized and has access to edit book",
+			name: "Test delete book when user is authorized and has access to edit book",
 			token: &jwt.Token{
 				Valid:  true,
 				Claims: jwt.MapClaims{"sub": "123"},
