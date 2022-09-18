@@ -11,21 +11,29 @@ import (
 )
 
 func LoginUser(c echo.Context) error {
-	var jsonBody models.User
-	if err := c.Bind(&jsonBody); err != nil {
+	var payload models.LoginUserPaylaod
+	if err := c.Bind(&payload); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"status":  "BAD_REQUEST",
 			"message": err.Error(),
 		})
 	}
-	user, err := database.GetUserByEmail(jsonBody.Email)
+	if err := c.Validate(payload); err != nil {
+		switch err := err.(type) {
+		case *echo.HTTPError:
+			return c.JSON(err.Code, err.Message)
+		default:
+			return c.JSON(http.StatusBadRequest, "unknwon")
+		}
+	}
+	user, err := database.GetUserByEmail(payload.Email)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
 			"status":  "UNAUTHORIZED",
 			"message": err.Error(),
 		})
 	}
-	if user.Password != jsonBody.Password {
+	if user.Password != payload.Password {
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
 			"status":  "UNAUTHORIZED",
 			"message": "username and password is not match",
@@ -93,7 +101,12 @@ func CreateUser(c echo.Context) error {
 		})
 	}
 	if err := c.Validate(payload); err != nil {
-		return err
+		switch err := err.(type) {
+		case *echo.HTTPError:
+			return c.JSON(err.Code, err.Message)
+		default:
+			return c.JSON(http.StatusBadRequest, "unknwon")
+		}
 	}
 	user := &models.User{
 		Name:     payload.Name,
@@ -127,7 +140,12 @@ func UpdateUser(c echo.Context) error {
 		})
 	}
 	if err := c.Validate(payload); err != nil {
-		return err
+		switch err := err.(type) {
+		case *echo.HTTPError:
+			return c.JSON(err.Code, err.Message)
+		default:
+			return c.JSON(http.StatusBadRequest, "unknwon")
+		}
 	}
 	strId := c.Param("id")
 	id, err := strconv.Atoi(strId)
