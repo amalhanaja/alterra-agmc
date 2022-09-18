@@ -158,7 +158,7 @@ func UpdateUser(c echo.Context) error {
 	if uint(id) != uid {
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
 			"status":  "UNAUTHORIZED",
-			"message": "akses di tolak",
+			"message": "access denied",
 		})
 	}
 	user := &models.User{
@@ -166,7 +166,7 @@ func UpdateUser(c echo.Context) error {
 		Email:    payload.Email,
 		Password: payload.Password,
 	}
-	user.ID = uint(id)
+	user.ID = uint(uid)
 	updatedUser, err := database.UpdateUser(user)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -197,7 +197,7 @@ func DeleteUser(c echo.Context) error {
 	if uint(id) != uid {
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
 			"status":  "UNAUTHORIZED",
-			"message": "akses di tolak",
+			"message": "access denied",
 		})
 	}
 

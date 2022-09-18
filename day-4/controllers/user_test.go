@@ -13,6 +13,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -290,6 +291,185 @@ func TestCreateUser(t *testing.T) {
 				assert.Equal(t, testCase.expectedData.Email, data["email"])
 				assert.Equal(t, testCase.expectedData.Name, data["name"])
 			}
+		})
+	}
+}
+
+func TestUpdateUser(t *testing.T) {
+	testCases := []struct {
+		name            string
+		userId          string
+		userPayload     map[string]interface{}
+		token           *jwt.Token
+		expectedCode    int
+		expectedStatus  string
+		expectedMessage *struct{ value string }
+		expectedData    *models.User
+	}{
+		{
+			name:            "Test update user when user is unauthorized should return unauthorized with message",
+			userPayload:     map[string]interface{}{},
+			expectedCode:    http.StatusUnauthorized,
+			expectedStatus:  "UNAUTHORIZED",
+			expectedMessage: &struct{ value string }{"failed get user"},
+		},
+		{
+			name:        "Test update user when id is NaN should return bad request with message",
+			userId:      "NaN",
+			userPayload: map[string]interface{}{},
+			token: &jwt.Token{
+				Valid:  true,
+				Claims: jwt.MapClaims{"sub": "1"},
+			},
+			expectedCode:    http.StatusBadRequest,
+			expectedStatus:  "BAD_REQUEST",
+			expectedMessage: &struct{ value string }{`strconv.Atoi: parsing "NaN": invalid syntax`},
+		},
+		{
+			name: "Test update user when user is authorized and doesn't has access to edit user",
+			token: &jwt.Token{
+				Valid:  true,
+				Claims: jwt.MapClaims{"sub": "100"},
+			},
+			userId:          "1",
+			expectedCode:    http.StatusUnauthorized,
+			expectedStatus:  "UNAUTHORIZED",
+			expectedMessage: &struct{ value string }{"access denied"},
+		},
+		{
+			name: "Test update book when user is authorized and has access to edit book",
+			userPayload: map[string]interface{}{
+				"email": "new_email@email.com",
+				"name":  "New User",
+			},
+			token: &jwt.Token{
+				Valid:  true,
+				Claims: jwt.MapClaims{"sub": "1"},
+			},
+			userId:         "1",
+			expectedCode:   http.StatusOK,
+			expectedStatus: "OK",
+			expectedData: &models.User{
+				Name:  "New User",
+				Email: "new_email@email.com",
+			},
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			// Arrange
+			e := echo.New()
+			e.Validator = validator.NewCustomValidator()
+			jsonPayload, _ := json.Marshal(&testCase.userPayload)
+			req := httptest.NewRequest(http.MethodPut, "/", strings.NewReader(string(jsonPayload)))
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+			c.SetPath("/books/:id")
+			c.SetParamNames("id")
+			c.SetParamValues(testCase.userId)
+			if testCase.token != nil {
+				c.Set("user", testCase.token)
+			}
+
+			// Act
+			UpdateUser(c)
+
+			// Assert
+			var payload map[string]interface{}
+			err := json.NewDecoder(rec.Body).Decode(&payload)
+			assert.NoError(t, err)
+			assert.Equal(t, testCase.expectedCode, rec.Code)
+			assert.Equal(t, testCase.expectedStatus, payload["status"])
+			if testCase.expectedMessage != nil {
+				assert.Equal(t, testCase.expectedMessage.value, payload["message"])
+			}
+			if testCase.expectedData != nil {
+				data := payload["data"].(map[string]interface{})
+				assert.Equal(t, testCase.expectedData.Email, data["email"])
+				assert.Equal(t, testCase.expectedData.Name, data["name"])
+			}
+		})
+	}
+}
+
+func TestDeleteUser(t *testing.T) {
+	testCases := []struct {
+		name           string
+		userId         string
+		token          *jwt.Token
+		expectedCode   int
+		expectedStatus string
+		expectMessage  string
+	}{
+		{
+			name:           "Test delete user when user is unauthorized should return unauthorized with message",
+			expectedCode:   http.StatusUnauthorized,
+			expectedStatus: "UNAUTHORIZED",
+			expectMessage:  "failed get user",
+		},
+		{
+			name:   "Test delete user when id is NaN should return bad request with message",
+			userId: "NaN",
+			token: &jwt.Token{
+				Valid:  true,
+				Claims: jwt.MapClaims{"sub": "123"},
+			},
+			expectedCode:   http.StatusBadRequest,
+			expectedStatus: "BAD_REQUEST",
+			expectMessage:  `strconv.Atoi: parsing "NaN": invalid syntax`,
+		},
+		{
+			name: "Test delete user when user is authorized and doesn't has access to delete user",
+			token: &jwt.Token{
+				Valid:  true,
+				Claims: jwt.MapClaims{"sub": "1"},
+			},
+			userId:         "123",
+			expectedCode:   http.StatusUnauthorized,
+			expectedStatus: "UNAUTHORIZED",
+			expectMessage:  "access denied",
+		},
+		{
+			name: "Test update book when user is authorized and has access to edit book",
+			token: &jwt.Token{
+				Valid:  true,
+				Claims: jwt.MapClaims{"sub": "1"},
+			},
+			userId:         "1",
+			expectedCode:   http.StatusOK,
+			expectedStatus: "OK",
+			expectMessage:  "deleted",
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			// Arrange
+			e := echo.New()
+			e.Validator = validator.NewCustomValidator()
+			req := httptest.NewRequest(http.MethodDelete, "/", nil)
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+			c.SetPath("/users/:id")
+			c.SetParamNames("id")
+			c.SetParamValues(testCase.userId)
+			if testCase.token != nil {
+				c.Set("user", testCase.token)
+			}
+
+			// Act
+			DeleteUser(c)
+
+			// Assert
+			var payload map[string]interface{}
+			err := json.NewDecoder(rec.Body).Decode(&payload)
+			assert.NoError(t, err)
+			assert.Equal(t, testCase.expectedCode, rec.Code)
+			assert.Equal(t, testCase.expectedStatus, payload["status"])
+			assert.Equal(t, testCase.expectMessage, payload["message"])
 		})
 	}
 }
