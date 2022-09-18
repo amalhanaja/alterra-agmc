@@ -377,7 +377,7 @@ func TestUpdateBook(t *testing.T) {
 			e := echo.New()
 			e.Validator = validator.NewCustomValidator()
 			jsonPayload, _ := json.Marshal(&testCase.bookPayload)
-			req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(string(jsonPayload)))
+			req := httptest.NewRequest(http.MethodPut, "/", strings.NewReader(string(jsonPayload)))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
