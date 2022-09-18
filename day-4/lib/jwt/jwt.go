@@ -19,13 +19,13 @@ func NewToken(id uint) (string, error) {
 }
 
 func ExtractID(token *jwt.Token) (uint, error) {
-	if token.Valid {
-		claims := token.Claims.(jwt.MapClaims)
-		id, err := strconv.Atoi(claims["sub"].(string))
-		if err != nil {
-			return 0, fmt.Errorf("failed parse id")
-		}
-		return uint(id), nil
+	if !token.Valid {
+		return 0, fmt.Errorf("invalid token")
 	}
-	return 0, token.Claims.Valid()
+	claims := token.Claims.(jwt.MapClaims)
+	id, err := strconv.Atoi(claims["sub"].(string))
+	if err != nil {
+		return 0, fmt.Errorf("failed parse id")
+	}
+	return uint(id), nil
 }
