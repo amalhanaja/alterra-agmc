@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"alterra-agmc-day-4/models"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -100,7 +101,12 @@ func UpdateBook(c echo.Context) error {
 		})
 	}
 	if err := c.Validate(payload); err != nil {
-		return err
+		switch err := err.(type) {
+		case *echo.HTTPError:
+			return c.JSON(err.Code, err.Message)
+		default:
+			return c.JSON(http.StatusBadRequest, "unknwon")
+		}
 	}
 	book := firstBook(func(b models.Book) bool {
 		return b.ID == uint(id)
@@ -111,10 +117,11 @@ func UpdateBook(c echo.Context) error {
 			"message": "book not found",
 		})
 	}
+	fmt.Println("USER ID", book.UserID, uid)
 	if book.UserID != uid {
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
 			"status":  "UNAUTHORIZED",
-			"message": "akses di tolak",
+			"message": "access denied",
 		})
 	}
 	if payload.Title != "" {
