@@ -14,14 +14,14 @@ func getAuthorizedUserId(c echo.Context) (uint, error) {
 	if !ok {
 		return 0, c.JSON(http.StatusUnauthorized, map[string]interface{}{
 			"status":  "UNAUTHORIZED",
-			"message": "failed to get user",
+			"message": "failed get user",
 		})
 	}
 	uid, err := jwt.ExtractID(token)
 	if err != nil {
 		return 0, c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"status":  "INTERNAL_SERVER_ERROR",
-			"message": "failed to extract",
+			"message": "invalid token",
 		})
 	}
 	return uid, nil

@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-var books []models.Book
+var books []models.Book = make([]models.Book, 0)
 
 func GetBooks(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
@@ -56,7 +56,12 @@ func CreateBook(c echo.Context) error {
 		})
 	}
 	if err := c.Validate(payload); err != nil {
-		return err
+		switch err := err.(type) {
+		case *echo.HTTPError:
+			return c.JSON(err.Code, err.Message)
+		default:
+			return c.JSON(http.StatusBadRequest, "unknwon")
+		}
 	}
 	book := models.Book{
 		ID:        uint(len(books) + 1),
