@@ -513,7 +513,7 @@ func TestDeleteBook(t *testing.T) {
 			testCase.before()
 			e := echo.New()
 			e.Validator = validator.NewCustomValidator()
-			req := httptest.NewRequest(http.MethodGet, "/", nil)
+			req := httptest.NewRequest(http.MethodDelete, "/", nil)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
