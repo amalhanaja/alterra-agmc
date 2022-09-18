@@ -141,6 +141,10 @@ func UpdateBook(c echo.Context) error {
 }
 
 func DeleteBook(c echo.Context) error {
+	uid, err := getAuthorizedUserId(c)
+	if err != nil {
+		return err
+	}
 	strId := c.Param("id")
 	id, err := strconv.Atoi(strId)
 	if err != nil {
@@ -148,10 +152,6 @@ func DeleteBook(c echo.Context) error {
 			"status":  "BAD_REQUEST",
 			"message": err.Error(),
 		})
-	}
-	uid, err := getAuthorizedUserId(c)
-	if err != nil {
-		return err
 	}
 	book := firstBook(func(b models.Book) bool {
 		return b.ID == uint(id)
@@ -165,7 +165,7 @@ func DeleteBook(c echo.Context) error {
 	if book.UserID != uid {
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
 			"status":  "UNAUTHORIZED",
-			"message": "akses di tolak",
+			"message": "access denied",
 		})
 	}
 	books = append(books[:id-1], books[id:]...)

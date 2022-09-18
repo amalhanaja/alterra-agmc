@@ -409,3 +409,131 @@ func TestUpdateBook(t *testing.T) {
 		})
 	}
 }
+
+func TestDeleteBook(t *testing.T) {
+	testCases := []struct {
+		name           string
+		bookId         string
+		before         func()
+		token          *jwt.Token
+		expectedCode   int
+		expectedStatus string
+		expectMessage  string
+	}{
+		{
+			name: "Test delete book when user is unauthorized should return unauthorized with message",
+			before: func() {
+				books = []models.Book{}
+			},
+			expectedCode:   http.StatusUnauthorized,
+			expectedStatus: "UNAUTHORIZED",
+			expectMessage:  "failed get user",
+		},
+		{
+			name:   "Test delete book when id is NaN should return bad request with message",
+			bookId: "NaN",
+			token: &jwt.Token{
+				Valid:  true,
+				Claims: jwt.MapClaims{"sub": "123"},
+			},
+			before: func() {
+				books = []models.Book{}
+			},
+			expectedCode:   http.StatusBadRequest,
+			expectedStatus: "BAD_REQUEST",
+			expectMessage:  `strconv.Atoi: parsing "NaN": invalid syntax`,
+		},
+		{
+			name: "Test update book when user is authorized and book not found",
+			token: &jwt.Token{
+				Valid:  true,
+				Claims: jwt.MapClaims{"sub": "123"},
+			},
+			before: func() {
+				books = []models.Book{}
+			},
+			bookId:         "100",
+			expectedCode:   http.StatusBadRequest,
+			expectedStatus: "BAD_REQUEST",
+			expectMessage:  "book not found",
+		},
+		{
+			name: "Test update book when user is authorized and doesn't has access to edit book",
+			token: &jwt.Token{
+				Valid:  true,
+				Claims: jwt.MapClaims{"sub": "123"},
+			},
+			before: func() {
+				books = []models.Book{
+					{
+						ID:        123,
+						Title:     "Test Book",
+						Isbn:      "ISBN",
+						Writer:    "Alfian Akmal Hanantio",
+						CreatedAt: time.Now(),
+						UpdatedAt: time.Now(),
+						UserID:    1001,
+					},
+				}
+			},
+			bookId:         "123",
+			expectedCode:   http.StatusUnauthorized,
+			expectedStatus: "UNAUTHORIZED",
+			expectMessage:  "access denied",
+		},
+		{
+			name: "Test update book when user is authorized and has access to edit book",
+			token: &jwt.Token{
+				Valid:  true,
+				Claims: jwt.MapClaims{"sub": "123"},
+			},
+			before: func() {
+				books = []models.Book{
+					{
+						ID:        1,
+						Title:     "Test Book",
+						Isbn:      "ISBN",
+						Writer:    "Alfian Akmal Hanantio",
+						CreatedAt: time.Now(),
+						UpdatedAt: time.Now(),
+						UserID:    123,
+					},
+				}
+			},
+			bookId:         "1",
+			expectedCode:   http.StatusOK,
+			expectedStatus: "OK",
+			expectMessage:  "deleted",
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			// Arrange
+			testCase.before()
+			e := echo.New()
+			e.Validator = validator.NewCustomValidator()
+			req := httptest.NewRequest(http.MethodGet, "/", nil)
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+			c.SetPath("/books/:id")
+			c.SetParamNames("id")
+			c.SetParamValues(testCase.bookId)
+			if testCase.token != nil {
+				c.Set("user", testCase.token)
+			}
+
+			// Act
+			DeleteBook(c)
+
+			// Assert
+			var payload map[string]interface{}
+			err := json.NewDecoder(rec.Body).Decode(&payload)
+			assert.NoError(t, err)
+			assert.Equal(t, testCase.expectedCode, rec.Code)
+			assert.Equal(t, testCase.expectedStatus, payload["status"])
+			assert.Equal(t, testCase.expectMessage, payload["message"])
+		})
+	}
+}
