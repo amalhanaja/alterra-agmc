@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"alterra-agmc-day-5-6/lib/validator"
 	"alterra-agmc-day-5-6/models"
+	"alterra-agmc-day-5-6/pkg/validator"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"

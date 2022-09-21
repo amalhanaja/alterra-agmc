@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"alterra-agmc-day-5-6/lib/database"
-	"alterra-agmc-day-5-6/lib/jwt"
 	"alterra-agmc-day-5-6/models"
+	"alterra-agmc-day-5-6/pkg/jwt"
 	"net/http"
 	"strconv"
 

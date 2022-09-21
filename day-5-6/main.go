@@ -2,7 +2,7 @@ package main
 
 import (
 	"alterra-agmc-day-5-6/config"
-	"alterra-agmc-day-5-6/lib/validator"
+	"alterra-agmc-day-5-6/pkg/validator"
 	"alterra-agmc-day-5-6/routes"
 )
 
