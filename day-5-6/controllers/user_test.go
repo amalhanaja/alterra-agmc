@@ -3,8 +3,8 @@ package controllers
 import (
 	"alterra-agmc-day-5-6/config"
 	"alterra-agmc-day-5-6/lib/database"
-	"alterra-agmc-day-5-6/lib/validator"
 	"alterra-agmc-day-5-6/models"
+	"alterra-agmc-day-5-6/pkg/validator"
 	"encoding/json"
 	"log"
 	"net/http"
