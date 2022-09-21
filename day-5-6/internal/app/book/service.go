@@ -11,5 +11,5 @@ type BookService interface {
 	FindByID(ctx context.Context, id uint) (*models.Book, error)
 	Create(ctx context.Context, payload *dto.CreateBookPayload) (*models.Book, error)
 	DeleteByID(ctx context.Context, id uint) error
-	Update(ctx context.Context, payload *dto.UpdateBookPayload) (*models.Book, error)
+	Update(ctx context.Context, id uint, payload *dto.UpdateBookPayload) (*models.Book, error)
 }
