@@ -8,3 +8,7 @@ type UserGormModel struct {
 	Email    string `json:"email"`
 	Password string `json:"-"`
 }
+
+func (UserGormModel) TableName() string {
+	return "users"
+}
