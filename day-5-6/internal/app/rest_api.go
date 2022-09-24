@@ -3,15 +3,19 @@ package app
 import (
 	"alterra-agmc-day-5-6/config"
 	"alterra-agmc-day-5-6/internal/datasources"
+	"alterra-agmc-day-5-6/internal/datasources/models"
 	"alterra-agmc-day-5-6/internal/services"
 	"alterra-agmc-day-5-6/internal/transportlayers/http/handlers"
 	"alterra-agmc-day-5-6/internal/transportlayers/http/middlewares"
 	"alterra-agmc-day-5-6/pkg/app"
 	"alterra-agmc-day-5-6/pkg/validator"
 	"fmt"
+	"log"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 type restApiApp struct {
@@ -26,11 +30,14 @@ func (*restApiApp) OnDestroy() {
 
 // OnInit implements app.App
 func (a *restApiApp) OnInit() error {
-	config.InitDB()
+	db, err := a.initGormDB()
+	if err != nil {
+		return err
+	}
 
 	// Repositories
 	bookRepository := datasources.NewBookInMemoryDataSource()
-	userRepository := datasources.NewUserGormDataSource(config.DB)
+	userRepository := datasources.NewUserGormDataSource(db)
 
 	// Services
 	bookService := services.NewBookService(bookRepository)
@@ -79,6 +86,18 @@ func (a *restApiApp) echo() *echo.Echo {
 	users.DELETE("/:id", a.userHandler.Delete, jwtMiddleware)
 
 	return e
+}
+
+func (a *restApiApp) initGormDB() (*gorm.DB, error) {
+	dsn := config.GetEnvOrDefault("DB_DSN", "root:password@tcp(localhost:3306)/development?charset=utf8mb4&parseTime=True&loc=Local")
+	db, err := gorm.Open(mysql.Open(dsn))
+	if err != nil {
+		return nil, err
+	}
+	log.Println("DB Connected")
+
+	db.AutoMigrate(&models.UserGormModel{})
+	return db, nil
 }
 
 func NewRestApiApp() app.App {
