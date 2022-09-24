@@ -9,11 +9,14 @@ import (
 	"alterra-agmc-day-5-6/internal/transportlayers/http/middlewares"
 	"alterra-agmc-day-5-6/pkg/app"
 	"alterra-agmc-day-5-6/pkg/validator"
+	"context"
 	"fmt"
 	"log"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -30,9 +33,16 @@ func (*restApiApp) OnDestroy() {
 
 // OnInit implements app.App
 func (a *restApiApp) OnInit() error {
-	db, err := a.initGormDB()
+	db, err := a.connectGormDB()
 	if err != nil {
 		return err
+	}
+	mongoDB, err := a.connectMongo(context.Background())
+	if err != nil {
+		return err
+	}
+	if mongoDB != nil {
+		fmt.Println("MongoDB Connected")
 	}
 
 	// Repositories
@@ -88,7 +98,7 @@ func (a *restApiApp) echo() *echo.Echo {
 	return e
 }
 
-func (a *restApiApp) initGormDB() (*gorm.DB, error) {
+func (a *restApiApp) connectGormDB() (*gorm.DB, error) {
 	dsn := config.GetEnvOrDefault("DB_DSN", "root:password@tcp(localhost:3306)/development?charset=utf8mb4&parseTime=True&loc=Local")
 	db, err := gorm.Open(mysql.Open(dsn))
 	if err != nil {
@@ -98,6 +108,23 @@ func (a *restApiApp) initGormDB() (*gorm.DB, error) {
 
 	db.AutoMigrate(&models.UserGormModel{})
 	return db, nil
+}
+
+func (a *restApiApp) connectMongo(ctx context.Context) (*mongo.Database, error) {
+
+	clientOptions := options.Client()
+	clientOptions.ApplyURI(config.GetEnvOrDefault("MONGO_URI", "mongodb://localhost:27017"))
+	client, err := mongo.NewClient(clientOptions)
+	if err != nil {
+		return nil, err
+	}
+
+	err = client.Connect(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return client.Database(config.GetEnvOrDefault("MONGO_DB_NAME", "development")), nil
+
 }
 
 func NewRestApiApp() app.App {
