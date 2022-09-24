@@ -231,12 +231,14 @@ func (h *bookHandlerImpl) Update(c echo.Context) error {
 		UpdatedAt: book.UpdatedAt,
 	}
 
-	return c.JSON(http.StatusCreated, response.SuccessResponse[response.BookResponse]{
-		Status: http.StatusCreated,
+	return c.JSON(http.StatusOK, response.SuccessResponse[response.BookResponse]{
+		Status: http.StatusOK,
 		Data:   bookResponse,
 	})
 }
 
-func NewBookHandler() BookHandler {
-	return &bookHandlerImpl{}
+func NewBookHandler(bookService services.BookService) BookHandler {
+	return &bookHandlerImpl{
+		service: bookService,
+	}
 }

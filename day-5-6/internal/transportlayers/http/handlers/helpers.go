@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"alterra-agmc-day-5-6/internal/transportlayers/http/response"
 	"alterra-agmc-day-5-6/pkg/jwt"
 	"net/http"
 
@@ -12,16 +13,18 @@ import (
 func getAuthorizedUserId(c echo.Context) (uint, error) {
 	token, ok := c.Get("user").(*goJWT.Token)
 	if !ok {
-		return 0, c.JSON(http.StatusUnauthorized, map[string]interface{}{
-			"status":  "UNAUTHORIZED",
-			"message": "failed get user",
+		return 0, c.JSON(http.StatusUnauthorized, response.ErrorResponse{
+			Status:  http.StatusUnauthorized,
+			Code:    "UNAUTHORIZED",
+			Message: "failed get user",
 		})
 	}
 	uid, err := jwt.ExtractID(token)
 	if err != nil {
-		return 0, c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"status":  "INTERNAL_SERVER_ERROR",
-			"message": "invalid token",
+		return 0, c.JSON(http.StatusUnauthorized, response.ErrorResponse{
+			Status:  http.StatusUnauthorized,
+			Code:    "UNAUTHORIZED",
+			Message: "invalid token",
 		})
 	}
 	return uid, nil
