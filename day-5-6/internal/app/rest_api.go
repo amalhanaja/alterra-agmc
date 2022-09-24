@@ -5,7 +5,7 @@ import (
 	"alterra-agmc-day-5-6/internal/datasources"
 	"alterra-agmc-day-5-6/internal/services"
 	"alterra-agmc-day-5-6/internal/transportlayers/http/handlers"
-	"alterra-agmc-day-5-6/middlewares"
+	"alterra-agmc-day-5-6/internal/transportlayers/http/middlewares"
 	"alterra-agmc-day-5-6/pkg/app"
 	"alterra-agmc-day-5-6/pkg/validator"
 	"fmt"
