@@ -110,6 +110,6 @@ func (ds *UserGormDataSource) Update(ctx context.Context, user *models.User) (*m
 	}, nil
 }
 
-func NewUserGormDataSource() repositories.UserRepository {
-	return &UserGormDataSource{}
+func NewUserGormDataSource(db *gorm.DB) repositories.UserRepository {
+	return &UserGormDataSource{db: db}
 }

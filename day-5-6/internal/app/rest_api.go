@@ -1,7 +1,10 @@
 package app
 
 import (
-	"alterra-agmc-day-5-6/controllers"
+	"alterra-agmc-day-5-6/config"
+	"alterra-agmc-day-5-6/internal/datasources"
+	"alterra-agmc-day-5-6/internal/services"
+	"alterra-agmc-day-5-6/internal/transportlayers/http/handlers"
 	"alterra-agmc-day-5-6/middlewares"
 	"alterra-agmc-day-5-6/pkg/app"
 	"alterra-agmc-day-5-6/pkg/validator"
@@ -12,6 +15,8 @@ import (
 )
 
 type restApiApp struct {
+	userHandler handlers.UserHandler
+	bookHandler handlers.BookHandler
 }
 
 // OnDestroy implements app.App
@@ -20,8 +25,22 @@ func (*restApiApp) OnDestroy() {
 }
 
 // OnInit implements app.App
-func (*restApiApp) OnInit() error {
-	panic("unimplemented")
+func (a *restApiApp) OnInit() error {
+	config.InitDB()
+
+	// Repositories
+	bookRepository := datasources.NewBookInMemoryDataSource()
+	userRepository := datasources.NewUserGormDataSource(config.DB)
+
+	// Services
+	bookService := services.NewBookService(bookRepository)
+	userService := services.NewUserService(userRepository)
+
+	// Handlers
+	a.bookHandler = handlers.NewBookHandler(bookService)
+	a.userHandler = handlers.NewUserHandler(userService)
+
+	return nil
 }
 
 // Run implements app.App
@@ -30,35 +49,34 @@ func (a *restApiApp) Run() error {
 		return fmt.Errorf("initialization failed: %v", err)
 	}
 	defer a.OnDestroy()
-	e := a.echo()
-	e.Validator = validator.NewCustomValidator()
-	return e.Start(":8080")
+	return a.echo().Start(":8080")
 }
 
 func (a *restApiApp) echo() *echo.Echo {
 	e := echo.New()
+	e.Validator = validator.NewCustomValidator()
 
 	e.Pre(middleware.RemoveTrailingSlash())
 	middlewares.UseLogMiddleware(e)
 
 	v1 := e.Group("/v1")
-	v1.POST("/login", controllers.LoginUser)
+	v1.POST("/login", a.userHandler.Login)
 
 	jwtMiddleware := middlewares.JWT()
 
 	books := v1.Group("/books")
-	books.POST("", controllers.CreateBook, jwtMiddleware)
-	books.GET("", controllers.GetBooks)
-	books.GET("/:id", controllers.GetBookById)
-	books.PUT("/:id", controllers.UpdateBook, jwtMiddleware)
-	books.DELETE("/:id", controllers.DeleteBook, jwtMiddleware)
+	books.POST("", a.bookHandler.Create, jwtMiddleware)
+	books.GET("", a.bookHandler.GetAll)
+	books.GET("/:id", a.bookHandler.GetByID)
+	books.PUT("/:id", a.bookHandler.Update, jwtMiddleware)
+	books.DELETE("/:id", a.bookHandler.Delete, jwtMiddleware)
 
 	users := v1.Group("/users")
-	users.POST("", controllers.CreateUser)
-	users.GET("", controllers.GetUsers, jwtMiddleware)
-	users.GET("/:id", controllers.GetUserById, jwtMiddleware)
-	users.PUT("/:id", controllers.UpdateUser, jwtMiddleware)
-	users.DELETE("/:id", controllers.DeleteUser, jwtMiddleware)
+	users.POST("", a.userHandler.Create)
+	users.GET("", a.userHandler.GetAll, jwtMiddleware)
+	users.GET("/:id", a.userHandler.GetByID, jwtMiddleware)
+	users.PUT("/:id", a.userHandler.Update, jwtMiddleware)
+	users.DELETE("/:id", a.userHandler.Delete, jwtMiddleware)
 
 	return e
 }
