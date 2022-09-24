@@ -31,7 +31,7 @@ func TestCreateBook(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Act
-			ds := datasources.NewInMemoryDataSource()
+			ds := datasources.NewBookInMemoryDataSource()
 
 			// Assert
 			_, err := ds.Create(context.TODO(), tc.book)
@@ -78,7 +78,7 @@ func TestFindAllBook(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Setup
-			ds := datasources.NewInMemoryDataSource()
+			ds := datasources.NewBookInMemoryDataSource()
 			for _, b := range tc.books {
 				_, _ = ds.Create(context.TODO(), b)
 			}
@@ -137,7 +137,7 @@ func TestDeleteByID(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Setup
-			ds := datasources.NewInMemoryDataSource()
+			ds := datasources.NewBookInMemoryDataSource()
 			for _, b := range tc.books {
 				_, _ = ds.Create(context.TODO(), b)
 			}
@@ -192,7 +192,7 @@ func TestFindBookByID(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Setup
-			ds := datasources.NewInMemoryDataSource()
+			ds := datasources.NewBookInMemoryDataSource()
 			for _, b := range tc.books {
 				_, _ = ds.Create(context.TODO(), b)
 			}
@@ -268,7 +268,7 @@ func TestUpdateeBook(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Setup
-			ds := datasources.NewInMemoryDataSource()
+			ds := datasources.NewBookInMemoryDataSource()
 			for _, b := range tc.books {
 				_, _ = ds.Create(context.TODO(), b)
 			}

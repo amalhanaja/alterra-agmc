@@ -7,12 +7,12 @@ import (
 	"time"
 )
 
-type BookInMemmoryDataSource struct {
+type BookInMemoryDataSource struct {
 	books []*models.Book
 }
 
 // Create implements repositories.BookRepository
-func (ds *BookInMemmoryDataSource) Create(ctx context.Context, book *models.Book) (*models.Book, error) {
+func (ds *BookInMemoryDataSource) Create(ctx context.Context, book *models.Book) (*models.Book, error) {
 	book.CreatedAt = time.Now().UTC()
 	book.UpdatedAt = time.Now().UTC()
 	book.ID = uint(len(ds.books) + 1)
@@ -21,7 +21,7 @@ func (ds *BookInMemmoryDataSource) Create(ctx context.Context, book *models.Book
 }
 
 // DeleteByID implements repositories.BookRepository
-func (ds *BookInMemmoryDataSource) DeleteByID(ctx context.Context, id uint) error {
+func (ds *BookInMemoryDataSource) DeleteByID(ctx context.Context, id uint) error {
 	for i, book := range ds.books {
 		if (book.ID) == id {
 			ds.books = append(ds.books[:i], ds.books[i+1:]...)
@@ -32,12 +32,12 @@ func (ds *BookInMemmoryDataSource) DeleteByID(ctx context.Context, id uint) erro
 }
 
 // FindAll implements repositories.BookRepository
-func (ds *BookInMemmoryDataSource) FindAll(ctx context.Context) ([]*models.Book, error) {
+func (ds *BookInMemoryDataSource) FindAll(ctx context.Context) ([]*models.Book, error) {
 	return ds.books, nil
 }
 
 // FindByID implements repositories.BookRepository
-func (ds *BookInMemmoryDataSource) FindByID(ctx context.Context, id uint) (*models.Book, error) {
+func (ds *BookInMemoryDataSource) FindByID(ctx context.Context, id uint) (*models.Book, error) {
 	for _, book := range ds.books {
 		if (book.ID) == id {
 			return book, nil
@@ -47,7 +47,7 @@ func (ds *BookInMemmoryDataSource) FindByID(ctx context.Context, id uint) (*mode
 }
 
 // Update implements repositories.BookRepository
-func (ds *BookInMemmoryDataSource) Update(ctx context.Context, book *models.Book) (*models.Book, error) {
+func (ds *BookInMemoryDataSource) Update(ctx context.Context, book *models.Book) (*models.Book, error) {
 	for i, b := range ds.books {
 		if b.ID == book.ID {
 			book.UpdatedAt = time.Now().UTC()
@@ -59,6 +59,6 @@ func (ds *BookInMemmoryDataSource) Update(ctx context.Context, book *models.Book
 	return nil, new(ErrRecordNotFound)
 }
 
-func NewInMemoryDataSource() repositories.BookRepository {
-	return &BookInMemmoryDataSource{}
+func NewBookInMemoryDataSource() repositories.BookRepository {
+	return &BookInMemoryDataSource{}
 }
