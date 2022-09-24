@@ -25,7 +25,14 @@ func (ds *UserGormDataSource) Create(ctx context.Context, user *models.User) (*m
 	if err := ds.db.Create(&userData).Error; err != nil {
 		return nil, err
 	}
-	return user, nil
+	return &models.User{
+		ID:        userData.ID,
+		Password:  userData.Password,
+		Email:     userData.Email,
+		Name:      userData.Name,
+		CreatedAt: userData.CreatedAt,
+		UpdatedAt: userData.UpdatedAt,
+	}, nil
 }
 
 // DeleteByID implements repositories.UserRepository
