@@ -10,6 +10,6 @@ type UserRepository interface {
 	FindByID(ctx context.Context, id uint) (*models.User, error)
 	FindByEmail(ctx context.Context, email string) (*models.User, error)
 	Create(ctx context.Context, user *models.User) (*models.User, error)
-	Update(ctx context.Context, payload *models.User) (*models.User, error)
+	Update(ctx context.Context, user *models.User) (*models.User, error)
 	DeleteByID(ctx context.Context, id uint) error
 }

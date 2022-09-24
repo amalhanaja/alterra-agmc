@@ -120,13 +120,13 @@ func (_m *UserRepository) FindByID(ctx context.Context, id uint) (*models.User, 
 	return r0, r1
 }
 
-// Update provides a mock function with given fields: ctx, payload
-func (_m *UserRepository) Update(ctx context.Context, payload *models.User) (*models.User, error) {
-	ret := _m.Called(ctx, payload)
+// Update provides a mock function with given fields: ctx, user
+func (_m *UserRepository) Update(ctx context.Context, user *models.User) (*models.User, error) {
+	ret := _m.Called(ctx, user)
 
 	var r0 *models.User
 	if rf, ok := ret.Get(0).(func(context.Context, *models.User) *models.User); ok {
-		r0 = rf(ctx, payload)
+		r0 = rf(ctx, user)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*models.User)
@@ -135,7 +135,7 @@ func (_m *UserRepository) Update(ctx context.Context, payload *models.User) (*mo
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *models.User) error); ok {
-		r1 = rf(ctx, payload)
+		r1 = rf(ctx, user)
 	} else {
 		r1 = ret.Error(1)
 	}
