@@ -1,7 +1,7 @@
 package config
 
 import (
-	"alterra-agmc-day-5-6/internal/models"
+	"alterra-agmc-day-5-6/internal/datasources/models"
 	"log"
 	"os"
 	"strconv"
@@ -24,7 +24,7 @@ func InitDB() {
 }
 
 func initMigration() {
-	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.UserGormModel{})
 }
 
 func GetJWTExpirationTime() int64 {
