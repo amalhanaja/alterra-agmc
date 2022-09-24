@@ -42,9 +42,9 @@ func (ds *UserGormDataSource) DeleteByID(ctx context.Context, id uint) error {
 
 // FindAll implements repositories.UserRepository
 func (ds *UserGormDataSource) FindAll(ctx context.Context) ([]*models.User, error) {
-	var userData []*gormModels.UserGormModel
+	var userData []gormModels.UserGormModel
 	var users []*models.User
-	if err := ds.db.Find(userData).Error; err != nil {
+	if err := ds.db.Find(&userData).Error; err != nil {
 		return users, err
 	}
 	for _, ud := range userData {
