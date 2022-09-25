@@ -1,9 +1,12 @@
 package main
 
-import "alterra-agmc-day-5-6/internal/app"
+import (
+	"alterra-agmc-day-5-6/internal/app"
+	"log"
+)
 
 func main() {
 	if err := app.NewRestApiApp().Run(); err != nil {
-		panic("error running rest api application")
+		log.Fatalf("Error Running Application: %v", err)
 	}
 }

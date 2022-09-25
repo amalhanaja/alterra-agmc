@@ -46,7 +46,7 @@ func (a *restApiApp) OnInit() error {
 	}
 
 	// Repositories
-	bookRepository := datasources.NewBookInMemoryDataSource()
+	bookRepository := datasources.NewBookMongoDataSource(mongoDB)
 	userRepository := datasources.NewUserGormDataSource(db)
 
 	// Services
@@ -113,7 +113,7 @@ func (a *restApiApp) connectGormDB() (*gorm.DB, error) {
 func (a *restApiApp) connectMongo(ctx context.Context) (*mongo.Database, error) {
 
 	clientOptions := options.Client()
-	clientOptions.ApplyURI(config.GetEnvOrDefault("MONGO_URI", "mongodb://localhost:27017"))
+	clientOptions.ApplyURI(config.GetEnvOrDefault("MONGO_URI", "mongodb://root:password@localhost:27017"))
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
 		return nil, err
