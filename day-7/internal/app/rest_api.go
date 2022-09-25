@@ -66,7 +66,9 @@ func (a *restApiApp) Run() error {
 		return fmt.Errorf("initialization failed: %v", err)
 	}
 	defer a.OnDestroy()
-	return a.echo().Start(":8080")
+	port := config.GetEnvOrDefault("APP_PORT", "8080")
+	addrs := fmt.Sprintf(":%s", port)
+	return a.echo().Start(addrs)
 }
 
 func (a *restApiApp) echo() *echo.Echo {
